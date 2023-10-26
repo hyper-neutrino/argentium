@@ -1,0 +1,3 @@
+# Argentium
+
+Argentium is a fairly opinionated utility library for `discord.js`. It is not a wrapper or a full framework, but rather a collection of tools to simplify developing Discord bots using `discord.js`. Although Argentium abstracts a lot of the tedious work and is very particular about certain things, it is still suitable to learn as a beginner to Discord bot development and if you want to go to base `discord.js`, you will only need to re-learn things like command registry and adding event listeners, which is much simpler than the business logic that you will need to write either way.
