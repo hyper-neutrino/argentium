@@ -1,4 +1,4 @@
-import { ChannelType } from "discord.js";
+import { ChannelType, Events } from "discord.js";
 import Argentium from "./index.ts";
 
 await new Argentium()
@@ -16,5 +16,5 @@ await new Argentium()
             .message((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``))
             .user((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``)),
     )
-    .ready(() => console.log("Ready!"))
+    .on(Events.ClientReady, () => console.log("Ready!"))
     .client(Bun.env.TOKEN!, { intents: 0 });
