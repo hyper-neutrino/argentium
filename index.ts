@@ -9,6 +9,10 @@ export default class Argentium {
     private commandsUtil = new CommandsUtil(this);
     private listeners: [keyof ClientEvents, any][] = [];
 
+    public use(fn: (argentium: Argentium) => Argentium) {
+        return fn(this);
+    }
+
     public setDefaultLocale(locale: Locale) {
         this.doLocalize = true;
         this.defaultLocale = locale;

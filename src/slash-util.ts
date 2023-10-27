@@ -38,6 +38,10 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
 
     constructor(private argentium: Argentium) {}
 
+    public use<R1, R2>(fn: (util: SlashUtil<T, U>) => SlashUtil<R1, R2>) {
+        return fn(this);
+    }
+
     public key(key: string) {
         const parts = key.split(/\s+/).filter((x) => x);
         if (parts.length < 1 || parts.length > 3) throw new Error("Slash command key must be 1-3 terms separated by whitespace");

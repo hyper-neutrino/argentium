@@ -8,6 +8,10 @@ export class MessageCtxUtil<T = { _: MessageContextMenuCommandInteraction; messa
 
     constructor(private argentium: Argentium) {}
 
+    public use<R1, R2>(fn: (util: MessageCtxUtil<T, U>) => MessageCtxUtil<R1, R2>) {
+        return fn(this);
+    }
+
     public name(name: string) {
         this._name = name;
         return this;

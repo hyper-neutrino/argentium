@@ -24,6 +24,10 @@ export class CommandsUtil {
 
     constructor(private argentium: Argentium) {}
 
+    public use(fn: (util: CommandsUtil) => CommandsUtil) {
+        return fn(this);
+    }
+
     public slash(fn: (util: SlashUtil) => SlashUtil<any, any>) {
         const su = fn(new SlashUtil(this.argentium));
         su.apply(this.slashCommandDataMap, this.slashCommandSrcMap);
