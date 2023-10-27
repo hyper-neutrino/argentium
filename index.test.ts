@@ -13,7 +13,8 @@ await new Argentium()
                     .channelOption("test-channel", "test option 3", { channelTypes: [ChannelType.GuildText, ChannelType.GuildAnnouncement] })
                     .fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``),
             )
-            .messageCtx((x) => x.name("test").fn((x) => console.log(x))),
+            .message((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``))
+            .user((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``)),
     )
     .ready(() => console.log("Ready!"))
     .client(Bun.env.TOKEN!, { intents: 0 });
