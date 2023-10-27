@@ -1,18 +1,36 @@
-import { ApplicationCommandType, ChatInputApplicationCommandData, Client, CommandInteraction, Events, InteractionType } from "discord.js";
+import {
+    ApplicationCommandType,
+    ChatInputApplicationCommandData,
+    Client,
+    CommandInteraction,
+    Events,
+    InteractionType,
+    MessageApplicationCommandData,
+} from "discord.js";
 import Argentium from "../index.ts";
+import { MessageCtxUtil } from "./message-ctx-util.ts";
 import { SlashUtil } from "./slash-util.ts";
 
 export class CommandsUtil {
     private slashCommandDataMap: Record<string, ChatInputApplicationCommandData> = {};
     private slashCommandSrcMap: Record<string, SlashUtil<any, any>> = {};
+    private messageCtxCommandDataMap: Record<string, MessageApplicationCommandData> = {};
+    private messageCtxCommandSrcMap: Record<string, MessageCtxUtil<any, any>> = {};
     private prefix: any[] = [];
     private suffix: any[] = [];
 
     constructor(private argentium: Argentium) {}
 
     public slash(fn: (util: SlashUtil) => SlashUtil<any, any>) {
-        const su = fn(new SlashUtil(this, this.argentium));
+        const su = fn(new SlashUtil(this.argentium));
         su.apply(this.slashCommandDataMap, this.slashCommandSrcMap);
+
+        return this;
+    }
+
+    public messageCtx(fn: (util: MessageCtxUtil) => MessageCtxUtil<any, any>) {
+        const mcu = fn(new MessageCtxUtil(this.argentium));
+        mcu.apply(this.messageCtxCommandDataMap, this.messageCtxCommandSrcMap);
 
         return this;
     }
@@ -28,7 +46,7 @@ export class CommandsUtil {
     }
 
     public async apply(client: Client) {
-        await client.application!.commands.set(Object.values(this.slashCommandDataMap));
+        await client.application!.commands.set([...Object.values(this.slashCommandDataMap), ...Object.values(this.messageCtxCommandDataMap)]);
 
         client.on(Events.InteractionCreate, async (i) => {
             if (i.type === InteractionType.ApplicationCommand) {
@@ -58,6 +76,31 @@ export class CommandsUtil {
                             if (response != undefined) await reply(response);
                         } catch (e) {
                             const response = await slash.catch(e, i);
+                            if (response != undefined) await reply(response);
+                        }
+                    }
+                } else if (i.commandType === ApplicationCommandType.Message) {
+                    const messageCtx = this.messageCtxCommandSrcMap[i.commandName];
+
+                    if (messageCtx) {
+                        try {
+                            const data = { _: i, message: i.targetMessage };
+                            let response: any;
+
+                            for (const fn of this.prefix) {
+                                await fn(data, (x: any) => (response = x));
+                                if (response) break;
+                            }
+
+                            response ??= await messageCtx.exec(data);
+
+                            for (const fn of this.suffix) {
+                                response = (await fn(response)) ?? response;
+                            }
+
+                            if (response != undefined) await reply(response);
+                        } catch (e) {
+                            const response = await messageCtx.catch(e, i);
                             if (response != undefined) await reply(response);
                         }
                     }

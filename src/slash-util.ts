@@ -24,7 +24,6 @@ import {
     User,
 } from "discord.js";
 import Argentium from "../index.ts";
-import { CommandsUtil } from "./commands-util.ts";
 import { Extend } from "./type-utils.ts";
 
 export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
@@ -37,7 +36,7 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
     private chain: any[] = [];
     private errorFn: any;
 
-    constructor(private commandsUtil: CommandsUtil, private argentium: Argentium) {}
+    constructor(private argentium: Argentium) {}
 
     public key(key: string) {
         const parts = key.split(/\s+/).filter((x) => x);
