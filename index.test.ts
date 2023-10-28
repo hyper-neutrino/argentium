@@ -2,6 +2,7 @@ import { Events } from "discord.js";
 import Argentium from "./index.ts";
 
 await new Argentium()
+    .beforeAllCommands((_, e) => e("escaped"))
     .commands((x) =>
         x
             .beforeAll(() => console.log("A"))

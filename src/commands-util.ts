@@ -84,7 +84,7 @@ export class CommandsUtil {
                             const data = slash.getData(i);
                             let response: any;
 
-                            for (const fn of this.prefix) {
+                            for (const fn of [...this.argentium.commandPrefix, ...this.prefix]) {
                                 await fn(data, (x: any) => (response = x));
                                 if (response) break;
                             }

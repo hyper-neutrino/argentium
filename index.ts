@@ -8,6 +8,7 @@ export default class Argentium {
     private localizations: Partial<Record<Locale, Record<string, string>>> = {};
     private commandsUtils: CommandsUtil[] = [];
     private listeners: [keyof ClientEvents, any][] = [];
+    public commandPrefix: any[] = [];
     public commandErrorFn?: any;
 
     public use(fn: (argentium: Argentium) => Argentium) {
@@ -99,6 +100,11 @@ export default class Argentium {
                 .filter(([, map]) => key in map)
                 .map(([locale, map]) => [locale, map[key]]),
         );
+    }
+
+    public beforeAllCommands(fn: (t: { _: CommandInteraction } & Omit<any, "_">, escape: (t: any) => void) => any) {
+        this.commandPrefix.push(fn);
+        return this;
     }
 
     public commands(fn: (commandsUtil: CommandsUtil) => any) {
