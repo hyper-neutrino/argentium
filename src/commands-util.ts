@@ -21,6 +21,7 @@ export class CommandsUtil {
     private userCtxCommandSrcMap: Record<string, UserCtxUtil<any, any>> = {};
     private prefix: any[] = [];
     private suffix: any[] = [];
+    private errorFn?: any;
 
     constructor(private argentium: Argentium) {}
 
@@ -59,12 +60,18 @@ export class CommandsUtil {
         return this;
     }
 
+    public error(fn: (e: any, t: { _: CommandInteraction & Omit<any, "_"> }) => any) {
+        this.errorFn = fn;
+        return this;
+    }
+
     public async apply(client: Client) {
-        await client.application!.commands.set([
+        for (const obj of [
             ...Object.values(this.slashCommandDataMap),
             ...Object.values(this.messageCtxCommandDataMap),
             ...Object.values(this.userCtxCommandDataMap),
-        ]);
+        ])
+            await client.application!.commands.create(obj);
 
         client.on(Events.InteractionCreate, async (i) => {
             if (i.type === InteractionType.ApplicationCommand) {
@@ -93,7 +100,12 @@ export class CommandsUtil {
 
                             if (response != undefined) await reply(response);
                         } catch (e) {
-                            const response = await slash.catch(e, i);
+                            const response = slash.willCatch
+                                ? await slash.catch(e, i)
+                                : this.errorFn
+                                ? await this.errorFn(e, i)
+                                : this.argentium.commandErrorFn?.(e, i);
+
                             if (response != undefined) await reply(response);
                         }
                     }
@@ -118,7 +130,11 @@ export class CommandsUtil {
 
                             if (response != undefined) await reply(response);
                         } catch (e) {
-                            const response = await messageCtx.catch(e, i);
+                            const response = messageCtx.willCatch
+                                ? await messageCtx.catch(e, i)
+                                : this.errorFn
+                                ? await this.errorFn(e, i)
+                                : this.argentium.commandErrorFn?.(e, i);
                             if (response != undefined) await reply(response);
                         }
                     }
@@ -143,7 +159,12 @@ export class CommandsUtil {
 
                             if (response != undefined) await reply(response);
                         } catch (e) {
-                            const response = await userCtx.catch(e, i);
+                            const response = userCtx.willCatch
+                                ? await userCtx.catch(e, i)
+                                : this.errorFn
+                                ? await this.errorFn(e, i)
+                                : this.argentium.commandErrorFn?.(e, i);
+
                             if (response != undefined) await reply(response);
                         }
                     }

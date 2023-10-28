@@ -1,4 +1,4 @@
-import { Client, ClientEvents, ClientOptions, Events, Locale, LocalizationMap } from "discord.js";
+import { Client, ClientEvents, ClientOptions, CommandInteraction, Events, Locale, LocalizationMap } from "discord.js";
 import { readFileSync, readdirSync } from "fs";
 import { CommandsUtil } from "./src/commands-util.ts";
 
@@ -6,8 +6,9 @@ export default class Argentium {
     private doLocalize = false;
     private defaultLocale: Locale = Locale.EnglishUS;
     private localizations: Partial<Record<Locale, Record<string, string>>> = {};
-    private commandsUtil = new CommandsUtil(this);
+    private commandsUtils: CommandsUtil[] = [];
     private listeners: [keyof ClientEvents, any][] = [];
+    public commandErrorFn?: any;
 
     public use(fn: (argentium: Argentium) => Argentium) {
         return fn(this);
@@ -101,7 +102,14 @@ export default class Argentium {
     }
 
     public commands(fn: (commandsUtil: CommandsUtil) => any) {
-        fn(this.commandsUtil);
+        const util = new CommandsUtil(this);
+        this.commandsUtils.push(util);
+        fn(util);
+        return this;
+    }
+
+    public onCommandError(fn: (e: any, t: { _: CommandInteraction & Omit<any, "_"> }) => any) {
+        this.commandErrorFn = fn;
         return this;
     }
 
@@ -115,7 +123,8 @@ export default class Argentium {
     }
 
     public async postApply(client: Client) {
-        await this.commandsUtil.apply(client);
+        await client.application!.commands.set([]);
+        for (const util of this.commandsUtils) await util.apply(client);
     }
 
     public async client(token: string, options: ClientOptions) {

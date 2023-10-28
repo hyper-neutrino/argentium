@@ -52,6 +52,10 @@ export class UserCtxUtil<T = { _: UserContextMenuCommandInteraction; user: User 
         return realData;
     }
 
+    public get willCatch() {
+        return !!this.errorFn;
+    }
+
     public async catch(e: any, cmd: UserContextMenuCommandInteraction) {
         if (!this.errorFn) throw e;
         await this.errorFn(e, cmd);

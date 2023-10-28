@@ -389,6 +389,10 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
         return realData;
     }
 
+    public get willCatch() {
+        return !!this.errorFn;
+    }
+
     public async catch(e: any, cmd: ChatInputCommandInteraction) {
         if (!this.errorFn) throw e;
         await this.errorFn(e, this.getData(cmd));

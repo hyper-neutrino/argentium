@@ -52,6 +52,10 @@ export class MessageCtxUtil<T = { _: MessageContextMenuCommandInteraction; messa
         return realData;
     }
 
+    public get willCatch() {
+        return !!this.errorFn;
+    }
+
     public async catch(e: any, cmd: MessageContextMenuCommandInteraction) {
         if (!this.errorFn) throw e;
         await this.errorFn(e, cmd);

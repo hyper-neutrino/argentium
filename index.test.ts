@@ -1,20 +1,32 @@
-import { ChannelType, Events } from "discord.js";
+import { Events } from "discord.js";
 import Argentium from "./index.ts";
 
 await new Argentium()
     .commands((x) =>
         x
+            .beforeAll(() => console.log("A"))
             .slash((x) =>
                 x
-                    .key("test")
-                    .description("test command")
-                    .stringOption("test", "test option", { required: true, autocomplete: (q) => [q || "...", ["a", "b"]] })
-                    .numberOption("test-number", "test option 2", { choices: { 1: "x", 2: "y" } })
-                    .channelOption("test-channel", "test option 3", { channelTypes: [ChannelType.GuildText, ChannelType.GuildAnnouncement] })
-                    .fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``),
-            )
-            .message((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``))
-            .user((x) => x.name("test").fn(({ _, ...x }) => `\`\`\`json\n${JSON.stringify(x, undefined, 4)}\n\`\`\``)),
+                    .key("test-a")
+                    .description("test command A")
+                    .fn(() => {
+                        throw "ok";
+                    }),
+            ),
     )
+    .commands((x) =>
+        x
+            .beforeAll(() => console.log("B"))
+            .error((e) => `${e}`)
+            .slash((x) =>
+                x
+                    .key("test-b")
+                    .description("test command B")
+                    .fn(() => {
+                        throw "ok";
+                    }),
+            ),
+    )
+    .onCommandError((e) => `! ${e}`)
     .on(Events.ClientReady, () => console.log("Ready!"))
     .client(Bun.env.TOKEN!, { intents: 0 });
