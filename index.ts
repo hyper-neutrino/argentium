@@ -110,18 +110,21 @@ export default class Argentium {
         return this;
     }
 
-    public async apply(client: Client) {
-        await this.commandsUtil.apply(client);
+    public async preApply(client: Client) {
         this.listeners.forEach(([e, fn]) => client.on(e, fn));
+    }
+
+    public async postApply(client: Client) {
+        await this.commandsUtil.apply(client);
     }
 
     public async client(token: string, options: ClientOptions) {
         const client = new Client(options);
         await client.login(token);
 
+        await this.preApply(client);
         await new Promise((r) => client.on(Events.ClientReady, r));
-
-        await this.apply(client);
+        await this.postApply(client);
 
         return client;
     }
