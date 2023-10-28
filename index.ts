@@ -123,7 +123,7 @@ export default class Argentium {
     }
 
     public async postApply(client: Client) {
-        await client.application!.commands.set([]);
+        await client.application!.commands.set(this.commandsUtils.flatMap((x) => x.commandArray));
         for (const util of this.commandsUtils) await util.apply(client);
     }
 

@@ -65,14 +65,11 @@ export class CommandsUtil {
         return this;
     }
 
-    public async apply(client: Client) {
-        for (const obj of [
-            ...Object.values(this.slashCommandDataMap),
-            ...Object.values(this.messageCtxCommandDataMap),
-            ...Object.values(this.userCtxCommandDataMap),
-        ])
-            await client.application!.commands.create(obj);
+    public get commandArray() {
+        return [...Object.values(this.slashCommandDataMap), ...Object.values(this.messageCtxCommandDataMap), ...Object.values(this.userCtxCommandDataMap)];
+    }
 
+    public async apply(client: Client) {
         client.on(Events.InteractionCreate, async (i) => {
             if (i.type === InteractionType.ApplicationCommand) {
                 const fmt = (k: any) => (typeof k === "string" ? { content: k } : k);
