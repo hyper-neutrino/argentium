@@ -104,7 +104,9 @@ export class CommandsUtil {
                                 ? await slash.catch(e, i)
                                 : this.errorFn
                                 ? await this.errorFn(e, i)
-                                : this.argentium.commandErrorFn?.(e, i);
+                                : this.argentium.commandErrorFn
+                                ? await this.argentium.commandErrorFn(e, i)
+                                : undefined;
 
                             if (response != undefined) await reply(response);
                         }
@@ -134,7 +136,10 @@ export class CommandsUtil {
                                 ? await messageCtx.catch(e, i)
                                 : this.errorFn
                                 ? await this.errorFn(e, i)
-                                : this.argentium.commandErrorFn?.(e, i);
+                                : this.argentium.commandErrorFn
+                                ? await this.argentium.commandErrorFn(e, i)
+                                : undefined;
+
                             if (response != undefined) await reply(response);
                         }
                     }
@@ -163,7 +168,9 @@ export class CommandsUtil {
                                 ? await userCtx.catch(e, i)
                                 : this.errorFn
                                 ? await this.errorFn(e, i)
-                                : this.argentium.commandErrorFn?.(e, i);
+                                : this.argentium.commandErrorFn
+                                ? await this.argentium.commandErrorFn(e, i)
+                                : undefined;
 
                             if (response != undefined) await reply(response);
                         }
