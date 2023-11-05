@@ -122,6 +122,7 @@ export default class Argentium {
 
     public allowInDms(...names: string[]) {
         this.dmCommands.push(...names.map((name) => this.localizeDefault(name)));
+        return this;
     }
 
     public on<K extends keyof ClientEvents>(e: K, fn: (...args: ClientEvents[K]) => any) {
