@@ -8,6 +8,7 @@ export default class Argentium {
     private localizations: Partial<Record<Locale, Record<string, string>>> = {};
     private commandsUtils: CommandsUtil[] = [];
     private listeners: [keyof ClientEvents, any][] = [];
+    private dmCommands: string[] = [];
     public commandPrefix: any[] = [];
     public commandErrorFn?: any;
 
@@ -119,6 +120,10 @@ export default class Argentium {
         return this;
     }
 
+    public allowInDms(...names: string[]) {
+        this.dmCommands.push(...names.map((name) => this.localizeDefault(name)));
+    }
+
     public on<K extends keyof ClientEvents>(e: K, fn: (...args: ClientEvents[K]) => any) {
         this.listeners.push([e, fn]);
         return this;
@@ -129,7 +134,10 @@ export default class Argentium {
     }
 
     public async postApply(client: Client) {
-        await client.application!.commands.set(this.commandsUtils.flatMap((x) => x.commandArray));
+        await client.application!.commands.set(
+            this.commandsUtils.flatMap((x) => x.commandArray.map((x) => ({ ...x, dmPermission: this.dmCommands.includes(x.name) }))),
+        );
+
         for (const util of this.commandsUtils) await util.apply(client);
     }
 
