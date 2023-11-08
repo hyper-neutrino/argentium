@@ -155,7 +155,7 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
 
         this.options.push(data);
 
-        return this as Extend<T, U, K, R, keyof boolean>;
+        return this as Extend<T, U, K, R, boolean>;
     }
 
     public userOption<K extends string, R extends boolean = false>(name: K, description: string, options?: { required?: R }) {
