@@ -185,6 +185,7 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
             description: this.argentium.localizeDefault(description),
             descriptionLocalizations: this.argentium.getLocalizations(description),
             required: options?.required,
+            channelTypes: (options?.channelTypes ?? []).filter((x) => x !== undefined) as any,
         };
 
         this.options.push(data);
