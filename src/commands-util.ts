@@ -1,4 +1,5 @@
 import {
+    AutocompleteInteraction,
     ChatInputApplicationCommandData,
     Client,
     CommandInteraction,
@@ -50,17 +51,17 @@ export class CommandsUtil {
         return this;
     }
 
-    public beforeAll(fn: (t: { _: CommandInteraction } & Omit<any, "_">, escape: (t: any) => void) => any) {
+    public beforeAll(fn: (t: { _: CommandInteraction | AutocompleteInteraction } & Omit<any, "_">, escape: (t: any) => void) => any) {
         this.prefix.push(fn);
         return this;
     }
 
-    public afterAll(fn: (t: { _: CommandInteraction } & Omit<any, "_">) => any) {
+    public afterAll(fn: (t: { _: CommandInteraction | AutocompleteInteraction } & Omit<any, "_">) => any) {
         this.suffix.push(fn);
         return this;
     }
 
-    public error(fn: (e: any, t: { _: CommandInteraction & Omit<any, "_"> }) => any) {
+    public error(fn: (e: any, t: { _: CommandInteraction | AutocompleteInteraction } & Omit<any, "_">) => any) {
         this.errorFn = fn;
         return this;
     }
@@ -178,7 +179,14 @@ export class CommandsUtil {
                     const key = [i.commandName, i.options.getSubcommandGroup(false), i.options.getSubcommand(false)].filter((x) => x).join(" ");
                     const slash = this.slashCommandSrcMap[key];
 
-                    const response = await slash.autocomplete(i);
+                    let response: any;
+
+                    for (const fn of [...this.argentium.commandPrefix, ...this.prefix]) {
+                        await fn({ _: i }, (x: any) => (response = x));
+                        if (response) break;
+                    }
+
+                    response ??= await slash.autocomplete(i);
                     if (response) await i.respond(response);
                 } catch {}
             }

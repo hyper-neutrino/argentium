@@ -1,4 +1,4 @@
-import { Client, ClientEvents, ClientOptions, CommandInteraction, Events, Locale, LocalizationMap } from "discord.js";
+import { AutocompleteInteraction, Client, ClientEvents, ClientOptions, CommandInteraction, Events, Locale, LocalizationMap } from "discord.js";
 import { readFileSync, readdirSync } from "fs";
 import { CommandsUtil } from "./src/commands-util.ts";
 
@@ -103,7 +103,7 @@ export default class Argentium {
         );
     }
 
-    public beforeAllCommands(fn: (t: { _: CommandInteraction } & Omit<any, "_">, escape: (t: any) => void) => any) {
+    public beforeAllCommands(fn: (t: { _: CommandInteraction | AutocompleteInteraction } & Omit<any, "_">, escape: (t: any) => void) => any) {
         this.commandPrefix.push(fn);
         return this;
     }
@@ -115,7 +115,7 @@ export default class Argentium {
         return this;
     }
 
-    public onCommandError(fn: (e: any, t: { _: CommandInteraction & Omit<any, "_"> }) => any) {
+    public onCommandError(fn: (e: any, t: { _: CommandInteraction | AutocompleteInteraction } & Omit<any, "_">) => any) {
         this.commandErrorFn = fn;
         return this;
     }
