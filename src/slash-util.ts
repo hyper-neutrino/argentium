@@ -176,7 +176,7 @@ export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
     public channelOption<K extends string, R extends boolean = false, C extends ChannelType | undefined = undefined>(
         name: K,
         description: string,
-        options?: { required?: R; channelTypes: C[] },
+        options?: { required?: R; channelTypes?: readonly C[] },
     ) {
         const data: ApplicationCommandChannelOptionData = {
             type: ApplicationCommandOptionType.Channel,
