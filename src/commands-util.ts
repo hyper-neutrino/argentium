@@ -8,10 +8,10 @@ import {
     MessageApplicationCommandData,
     UserApplicationCommandData,
 } from "discord.js";
-import Argentium from "../index.ts";
-import { MessageCtxUtil } from "./message-ctx-util.ts";
-import { SlashUtil } from "./slash-util.ts";
-import { UserCtxUtil } from "./user-ctx-util.ts";
+import Argentium from "..";
+import { MessageCtxUtil } from "./message-ctx-util";
+import { SlashUtil } from "./slash-util";
+import { UserCtxUtil } from "./user-ctx-util";
 
 export class CommandsUtil {
     private slashCommandDataMap: Record<string, ChatInputApplicationCommandData> = {};

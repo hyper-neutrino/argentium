@@ -23,8 +23,8 @@ import {
     Role,
     User,
 } from "discord.js";
-import Argentium from "../index.ts";
-import { Extend } from "./type-utils.ts";
+import Argentium from "..";
+import { Extend } from "./type-utils";
 
 export class SlashUtil<T = { _: ChatInputCommandInteraction }, U = undefined> {
     private _name?: string;

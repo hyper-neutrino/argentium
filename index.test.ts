@@ -1,5 +1,5 @@
 import { Events } from "discord.js";
-import Argentium from "./index.ts";
+import Argentium from ".";
 
 await new Argentium()
     .beforeAllCommands((_, e) => e("escaped"))

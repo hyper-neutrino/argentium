@@ -12,7 +12,7 @@ import {
     UserContextMenuCommandInteraction,
 } from "discord.js";
 import { readFileSync, readdirSync } from "fs";
-import { CommandsUtil } from "./src/commands-util.ts";
+import { CommandsUtil } from "./src/commands-util";
 
 export default class Argentium {
     private doLocalize = false;

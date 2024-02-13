@@ -1,5 +1,5 @@
 import { ApplicationCommandType, Message, MessageApplicationCommandData, MessageContextMenuCommandInteraction } from "discord.js";
-import Argentium from "../index.ts";
+import Argentium from "..";
 
 export class MessageCtxUtil<T = { _: MessageContextMenuCommandInteraction; message: Message }, U = undefined> {
     private _name?: string;

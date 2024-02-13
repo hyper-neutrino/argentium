@@ -1,5 +1,5 @@
 import { ApplicationCommandType, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
-import Argentium from "../index.ts";
+import Argentium from "..";
 
 export class UserCtxUtil<T = { _: UserContextMenuCommandInteraction; user: User }, U = undefined> {
     private _name?: string;
