@@ -1,7 +1,21 @@
 {
     "name": "argentium",
-    "version": "0.0.16",
+    "description": "an opinionated discord.js wrapper",
+    "maintainers": [
+        "hyper-neutrino"
+    ],
+    "contributors": [
+        "hyper-neutrino"
+    ],
+    "bugs": "https://github.com/hyper-neutrino/argentium/issues",
+    "licenses": [],
+    "repositories": {
+        "type": "git",
+        "url": "https://github.com/hyper-neutrino/argentium"
+    },
+    "version": "0.0.17",
     "type": "module",
+    "main": "index.ts",
     "module": "index.ts",
     "scripts": {
         "build": "tsc"
@@ -16,5 +30,6 @@
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
-    }
+    },
+    "directories": {}
 }
